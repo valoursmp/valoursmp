@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Valour SMP • Minecraft Server</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="Valour SMP – a community-driven Minecraft SMP with seasons, events, and powerful ranks. Join the adventure today!"
+  />
+
+  <!-- Google Font (optional, Discord-ish vibe) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      /* Discord-like color palette */
+      --bg-main: #050816;
+      --bg-elevated: rgba(17, 24, 39, 0.9);
+      --bg-soft: rgba(31, 41, 55, 0.9);
+      --accent: #5865f2;
+      --accent-soft: rgba(88, 101, 242, 0.18);
+      --accent-strong: #3b44c9;
+      --accent-alt: #00b3ff;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(148, 163, 184, 0.25);
+      --danger: #f97373;
+      --success: #4ade80;
+      --radius-xl: 1.5rem;
+      --radius-lg: 1rem;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.8);
+      --shadow-pill: 0 10px 30px rgba(88, 101, 242, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #111827 0, transparent 55%),
+        radial-gradient(circle at top right, #0f172a 0, transparent 50%),
+        radial-gradient(circle at bottom, #020617 0, #020617 60%, #000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.9),
+        rgba(15, 23, 42, 0.7),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1.5rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: radial-gradient(circle at 30% 30%, #fff 0, #facc15 22%, #b45309 60%, #111827 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 25px rgba(250, 204, 21, 0.45);
+    }
+
+    .logo-circle span {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #020617;
+    }
+
+    .nav-title {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .nav-title-main {
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+    }
+
+    .nav-title-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      color: var(--text-muted);
+      transition: background 0.18s ease, color 0.18s ease, transform 0.1s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(31, 41, 55, 0.9);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+
+    .nav-pill {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      padding: 0.48rem 0.95rem;
+      border-radius: 999px;
+      box-shadow: var(--shadow-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        background 0.12s ease;
+    }
+
+    .nav-pill span {
+      font-size: 1rem;
+      transform: translateY(1px);
+    }
+
+    .nav-pill:hover {
+      transform: translateY(-1px);
+      background: var(--accent-strong);
+      box-shadow: 0 12px 30px rgba(88, 101, 242, 0.7);
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      border-radius: 999px;
+      background: #e5e7eb;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 58px;
+        right: 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        background: rgba(15, 23, 42, 0.98);
+        padding: 0.75rem;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.9);
+        min-width: 190px;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .nav-toggle {
+        display: flex;
+      }
+    }
+
+    /* HERO */
+    .hero {
+      padding: 2.2rem 0 3.5rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .hero-badge {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--text-muted);
+    }
+
+    .hero-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.7);
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 4vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(120deg, #a855f7, #6366f1, #0ea5e9);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      color: var(--text-muted);
+      max-width: 32rem;
+      font-size: 0.98rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 0.8rem 1.3rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        background 0.12s ease, color 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+      color: white;
+      box-shadow: var(--shadow-pill);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 40px rgba(59, 130, 246, 0.9);
+    }
+
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(31, 41, 55, 0.95);
+      transform: translateY(-1px);
+    }
+
+    .hero-ip-box {
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-lg);
+      border: 1px dashed rgba(148, 163, 184, 0.55);
+      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.4), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(236, 72, 153, 0.4), transparent 60%),
+        rgba(17, 24, 39, 0.95);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.83rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero-ip-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .ip-label {
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .ip-value {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .version-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: 999px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    .copy-btn {
+      border-radius: 999px;
+      padding: 0.55rem 0.95rem;
+      border: none;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      transition: background 0.12s ease, transform 0.12s ease;
+    }
+
+    .copy-btn:hover {
+      background: rgba(31, 41, 55, 0.95);
+      transform: translateY(-1px);
+    }
+
+    /* HERO RIGHT */
+    .hero-right {
+      perspective: 1400px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-card {
+      width: 100%;
+      max-width: 360px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95)),
+        radial-gradient(circle at top, rgba(96, 165, 250, 0.35), transparent 55%);
+      border-radius: var(--radius-xl);
+      padding: 1.3rem 1.3rem 1.2rem;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: var(--shadow-soft);
+      transform: rotateY(-8deg) rotateX(6deg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      background: conic-gradient(
+        from 40deg,
+        rgba(96, 165, 250, 0.25),
+        transparent,
+        transparent,
+        rgba(244, 114, 182, 0.25),
+        transparent,
+        transparent
+      );
+      opacity: 0.8;
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .hero-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.7rem;
+    }
+
+    .hero-card-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.9);
+    }
+
+    .hero-card-main {
+      margin: 0.35rem 0 0.8rem;
+    }
+
+    .hero-card-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.15rem;
+    }
+
+    .hero-card-tagline {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .hero-card-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.7rem;
+      margin: 1rem 0 1.2rem;
+    }
+
+    .stat-pill {
+      border-radius: 0.9rem;
+      padding: 0.6rem 0.7rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-size: 0.75rem;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .hero-card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .mini-link {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+
+    .mini-link:hover {
+      color: var(--accent-alt);
+    }
+
+    /* SECTION WRAPPER */
+    section {
+      padding: 1rem 0 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .section-eyebrow {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .section-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 38rem;
+    }
+
+    /* FEATURES */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.35rem;
+    }
+
+    @media (max-width: 900px) {
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature-card {
+      border-radius: var(--radius-lg);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 1rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(
+        circle at top left,
+        rgba(96, 165, 250, 0.32),
+        transparent 65%
+      );
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .feature-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(88, 101, 242, 0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .feature-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+    }
+
+    .feature-text {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 0.6rem;
+    }
+
+    .feature-tag {
+      display: inline-flex;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    /* STORE / RANKS */
+    .store-section {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+      gap: 1.7rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .store-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .store-panel {
+      border-radius: var(--radius-xl);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 1.2rem 1.3rem 1.15rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .store-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .store-pill {
+      font-size: 0.75rem;
+      padding: 0.28rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .rank-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .rank-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rank-card {
+      border-radius: 0.9rem;
+      background: var(--bg-soft);
+      padding: 0.7rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .rank-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .rank-price {
+      font-size: 0.85rem;
+      color: var(--accent-alt);
+      font-weight: 500;
+    }
+
+    .rank-perks {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.7rem;
+    }
+
+    .note strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .store-side {
+      border-radius: var(--radius-xl);
+      background: radial-gradient(circle at top, rgba(96, 165, 250, 0.35), transparent 60%),
+        var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 1.1rem 1.25rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .store-side h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .store-side p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.7rem;
+    }
+
+    .store-side ul {
+      list-style: none;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .store-side li {
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+
+    .store-side li span {
+      margin-top: 0.05rem;
+    }
+
+    /* HOW TO JOIN */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .step-card {
+      border-radius: var(--radius-lg);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 0.95rem 1rem;
+    }
+
+    .step-number {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.65rem;
+    }
+
+    .step-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .step-text {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    /* FAQ */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 1.6rem;
+    }
+
+    @media (max-width: 900px) {
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .faq-list {
+      border-radius: var(--radius-xl);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 1.1rem 1.2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .faq-item + .faq-item {
+      border-top: 1px solid rgba(55, 65, 81, 0.8);
+      margin-top: 0.7rem;
+      padding-top: 0.7rem;
+    }
+
+    .faq-q {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .faq-a {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .faq-side {
+      border-radius: var(--radius-xl);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 1.1rem 1.2rem;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .faq-side h3 {
+      font-size: 1.05rem;
+    }
+
+    .faq-side p {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .faq-side .btn-primary {
+      align-self: flex-start;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(55, 65, 81, 0.8);
+      padding: 1.4rem 0 1.6rem;
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.7rem;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .footer-links a {
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 3px;
+    }
+
+    .brand-disclaimer {
+      max-width: 30rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner container">
+      <div class="nav-left">
+        <div class="logo-circle">
+          <!-- Replace this with your logo <img src="assets/logo.png" alt="Valour SMP Logo"> -->
+          <span>V</span>
+        </div>
+        <div class="nav-title">
+          <span class="nav-title-main">Valour SMP</span>
+          <span class="nav-title-sub">Survival • Community • Seasons</span>
+        </div>
+      </div>
+
+      <nav>
+        <div class="nav-toggle" id="navToggle">
+          <span></span>
+          <span></span>
+        </div>
+        <div class="nav-links" id="navLinks">
+          <a href="#about">About</a>
+          <a href="#store">Ranks & Store</a>
+          <a href="#join">How to Join</a>
+          <a href="#faq">FAQ</a>
+          <a
+            href="https://discord.gg/YOUR_DISCORD"
+            class="nav-pill"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>●</span> Join Discord
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <!-- LEFT -->
+        <div>
+          <div class="hero-badge-row">
+            <div class="hero-badge">
+              <span class="hero-badge-dot"></span>
+              Live community SMP
+            </div>
+            <div class="hero-badge">
+              🛡️ No pay-to-win • Fair perks
+            </div>
+          </div>
+
+          <h1 class="hero-title">
+            Welcome to <span class="hero-highlight">Valour SMP</span>
+          </h1>
+          <p class="hero-subtitle">
+            A community-driven Minecraft SMP with seasons, leaderboards, and
+            epic events. Team up with friends, build huge bases, and fight your way
+            through custom challenges — all without losing that vanilla feel.
+          </p>
+
+          <div class="hero-cta-row">
+            <button class="btn btn-primary" onclick="scrollToSection('join')">
+              Join the Server
+              <span>⏵</span>
+            </button>
+            <a
+              href="https://store.YOUR_DOMAIN_HERE/"
+              class="btn btn-ghost"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open Webstore
+            </a>
+          </div>
+
+          <div class="hero-ip-box">
+            <div class="hero-ip-meta">
+              <span class="ip-label">Server Address</span>
+              <span class="ip-value" id="serverIp">SERVER_IP_HERE</span>
+              <span class="version-pill">
+                <span>📦</span>
+                Supports 1.20+ Java & Bedrock*
+              </span>
+            </div>
+            <button
+              class="copy-btn"
+              onclick="copyIp()"
+              id="copyButton"
+            >
+              <span>📋</span>
+              <span>Copy IP</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT CARD -->
+        <div class="hero-right">
+          <div class="hero-card">
+            <div class="hero-card-inner">
+              <div class="hero-card-header">
+                <span class="hero-card-title">Server overview</span>
+                <span class="status-dot"></span>
+              </div>
+
+              <div class="hero-card-main">
+                <div class="hero-card-name">Valour SMP</div>
+                <div class="hero-card-tagline">
+                  A chill, yet competitive, multiplayer world.
+                </div>
+              </div>
+
+              <div class="hero-card-stats">
+                <div class="stat-pill">
+                  <div class="stat-label">Players online</div>
+                  <div class="stat-value">?? / ??</div>
+                </div>
+                <div class="stat-pill">
+                  <div class="stat-label">Region</div>
+                  <div class="stat-value">[Your Region]</div>
+                </div>
+                <div class="stat-pill">
+                  <div class="stat-label">Season</div>
+                  <div class="stat-value">Season 1</div>
+                </div>
+              </div>
+
+              <div class="hero-card-actions">
+                <button
+                  class="btn btn-primary"
+                  style="width: 100%; justify-content: center;"
+                  onclick="window.open('https://store.YOUR_DOMAIN_HERE/', '_blank')"
+                >
+                  Browse Ranks & Crates
+                </button>
+                <button
+                  class="btn btn-ghost"
+                  style="width: 100%; justify-content: center; font-weight: 500;"
+                  onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
+                >
+                  Join the Valour Discord
+                </button>
+                <div class="mini-link" onclick="scrollToSection('join')">
+                  <span>➜</span>
+                  <span>See how to join on Java & Bedrock</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- /hero-grid -->
+    </section>
+
+    <!-- ABOUT / FEATURES -->
+    <section id="about">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">Features</span>
+          <h2 class="section-title">Built for players who take SMP seriously</h2>
+          <p class="section-subtitle">
+            Valour SMP mixes that classic survival grind with modern QoL plugins
+            and events. No pay-to-win, no nonsense — just a server that respects
+            your time and effort.
+          </p>
+        </div>
+
+        <div class="card-grid">
+          <article class="feature-card">
+            <div class="feature-inner">
+              <div class="feature-icon">🏰</div>
+              <h3 class="feature-title">Semi-vanilla survival</h3>
+              <p class="feature-text">
+                Keep the core Minecraft feel with balanced tweaks like homes,
+                claims, and minor economy tools so griefing is prevented and
+                bases stay safe.
+              </p>
+              <span class="feature-tag">Keep inventory & claims configurable</span>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-inner">
+              <div class="feature-icon">⚔️</div>
+              <h3 class="feature-title">Seasonal events & wars</h3>
+              <p class="feature-text">
+                Jump into custom events — KOTH, boss fights, base raids, and
+                limited-time challenges with cosmetic rewards and leaderboard
+                flex.
+              </p>
+              <span class="feature-tag">Event calendar in Discord</span>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-inner">
+              <div class="feature-icon">💬</div>
+              <h3 class="feature-title">Discord-linked chat</h3>
+              <p class="feature-text">
+                Stay connected even when you’re offline. In-game chat can sync
+                with Discord so your team never misses what’s happening.
+              </p>
+              <span class="feature-tag">Community first</span>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-inner">
+              <div class="feature-icon">🪙</div>
+              <h3 class="feature-title">Fair, non P2W ranks</h3>
+              <p class="feature-text">
+                Ranks are designed to support the server, not break it. Get
+                QoL perks, cosmetics, and chat flex — not game-breaking power.
+              </p>
+              <span class="feature-tag">Balanced perks only</span>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-inner">
+              <div class="feature-icon">🛡️</div>
+              <h3 class="feature-title">Anti-cheat & moderation</h3>
+              <p class="feature-text">
+                Robust anti-cheat and active staff keep hackers and griefers
+                out so legit players can enjoy the grind.
+              </p>
+              <span class="feature-tag">Appeals handled via Discord</span>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-inner">
+              <div class="feature-icon">🗺️</div>
+              <h3 class="feature-title">Expanding world & resets</h3>
+              <p class="feature-text">
+                Fresh seasons with new goals and clean worlds prevent the map
+                from becoming stale, while keeping special builds backed up.
+              </p>
+              <span class="feature-tag">Season-based progression</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORE / RANKS -->
+    <section id="store">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">Store</span>
+          <h2 class="section-title">Support the server & unlock ranks</h2>
+          <p class="section-subtitle">
+            Every purchase helps keep Valour SMP online and growing. Our ranks
+            are cosmetic and QoL focused — no pay-to-win, just perks that make
+            the grind smoother.
+          </p>
+        </div>
+
+        <div class="store-section">
+          <div class="store-panel">
+            <div class="store-pill-row">
+              <span class="store-pill">🪙 Instant delivery</span>
+              <span class="store-pill">💳 Secure checkout</span>
+              <span class="store-pill">📜 No pay-to-win policy</span>
+            </div>
+
+            <h3 style="font-size:1.1rem; margin-bottom:0.35rem;">
+              Popular ranks
+            </h3>
+            <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:0.7rem;">
+              These are example tiers — rename them to match your actual store
+              packages.
+            </p>
+
+            <div class="rank-list">
+              <div class="rank-card">
+                <div class="rank-name">Knight</div>
+                <div class="rank-price">$4.99</div>
+                <div class="rank-perks">
+                  • Coloured chat<br>
+                  • Extra /sethome<br>
+                  • Small daily reward
+                </div>
+              </div>
+
+              <div class="rank-card">
+                <div class="rank-name">Champion</div>
+                <div class="rank-price">$9.99</div>
+                <div class="rank-perks">
+                  • All Knight perks<br>
+                  • Extra claims<br>
+                  • /hat, /nick (rules-friendly)
+                </div>
+              </div>
+
+              <div class="rank-card">
+                <div class="rank-name">Legend</div>
+                <div class="rank-price">$19.99</div>
+                <div class="rank-perks">
+                  • All Champion perks<br>
+                  • Particle trails & cosmetics<br>
+                  • Discord donator role
+                </div>
+              </div>
+            </div>
+
+            <button
+              class="btn btn-primary"
+              style="margin-top:1rem;"
+              onclick="window.open('https://store.YOUR_DOMAIN_HERE/', '_blank')"
+            >
+              Open webstore
+            </button>
+
+            <p class="note">
+              * All prices and names here are placeholders — configure them in
+              your Tebex / store panel and update this section to match.
+            </p>
+          </div>
+
+          <aside class="store-side">
+            <h3>Why we sell ranks</h3>
+            <p>
+              Servers cost money to host. Ranks and crates keep Valour SMP
+              online, help fund upgrades, and support new content drops — all
+              while keeping gameplay fair.
+            </p>
+
+            <ul>
+              <li>
+                <span>✅</span>
+                <span>Funds go into better hardware, plugins, and anti-cheat.</span>
+              </li>
+              <li>
+                <span>✅</span>
+                <span>Perks are QoL and cosmetic — nothing that makes you
+                  unbeatable.</span>
+              </li>
+              <li>
+                <span>✅</span>
+                <span>Chargebacks and abuse result in global bans across the
+                  network.</span>
+              </li>
+            </ul>
+
+            <p class="note">
+              If you are under 18, always get a parent or guardian’s permission
+              before buying anything.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW TO JOIN -->
+    <section id="join">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">How to join</span>
+          <h2 class="section-title">Play Valour SMP on Java or Bedrock</h2>
+          <p class="section-subtitle">
+            Follow the steps below to hop onto the server. If you get stuck,
+            open a ticket in our Discord and staff can walk you through it.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          <article class="step-card">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Java Edition</h3>
+            <p class="step-text">
+              Launch Minecraft Java, click
+              <strong>Multiplayer</strong> → <strong>Direct Connect</strong> or
+              <strong>Add Server</strong>, then paste the IP:
+            </p>
+            <p class="step-text" style="color:#e5e7eb;">
+              <code style="background:rgba(15,23,42,0.9); padding:0.25rem 0.4rem; border-radius:0.4rem;">
+                SERVER_IP_HERE
+              </code>
+            </p>
+            <p class="step-text">
+              Hit <strong>Join Server</strong> and you’re in!
+            </p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Bedrock Edition*</h3>
+            <p class="step-text">
+              From the main menu, go to <strong>Play</strong> → <strong>Servers</strong> →
+              <strong>Add Server</strong>.
+            </p>
+            <p class="step-text">
+              Use the same IP and set the port to:
+              <strong>PORT_HERE</strong> (replace with your actual port).
+            </p>
+            <p class="step-text">
+              Save, select the server, and tap <strong>Join</strong>.
+            </p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number">3</div>
+            <h3 class="step-title">Join the community</h3>
+            <p class="step-text">
+              Link up on Discord to see announcements, event times, giveaways,
+              and to talk to staff if you need help.
+            </p>
+            <button
+              class="btn btn-primary"
+              onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
+            >
+              Join Valour SMP Discord
+            </button>
+            <p class="step-text" style="margin-top:0.45rem; font-size:0.8rem;">
+              * Bedrock support is optional — if you don’t have it enabled,
+              remove or edit this card.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">FAQ</span>
+          <h2 class="section-title">Common questions</h2>
+          <p class="section-subtitle">
+            Some quick answers. You can expand this section over time based on
+            what your players ask the most.
+          </p>
+        </div>
+
+        <div class="faq-grid">
+          <div class="faq-list">
+            <div class="faq-item">
+              <div class="faq-q">Is Valour SMP pay-to-win?</div>
+              <div class="faq-a">
+                No. Ranks are designed for cosmetics and convenience only. You
+                won’t get game-breaking gear or unfair PvP advantages by
+                donating.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-q">Do I need to join the Discord?</div>
+              <div class="faq-a">
+                You can play without Discord, but we recommend joining so you
+                don’t miss events, season announcements, or staff updates.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-q">Are there resets or seasons?</div>
+              <div class="faq-a">
+                Yes. Worlds reset between seasons to keep the map fresh, but
+                we may showcase standout builds in future hubs or galleries.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-q">How do I appeal a ban or report someone?</div>
+              <div class="faq-a">
+                All appeals and reports go through our Discord. Open a ticket in
+                the appropriate channel and staff will take a look.
+              </div>
+            </div>
+          </div>
+
+          <aside class="faq-side">
+            <h3>Still need help?</h3>
+            <p>
+              If something’s not working — connection issues, rank not showing
+              up, or anything else — reach out and we’ll try to help as soon as
+              possible.
+            </p>
+
+            <button
+              class="btn btn-primary"
+              onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
+            >
+              Open support in Discord
+            </button>
+
+            <p class="note">
+              Tip: you can link a channel like <strong>#faq</strong> on Discord
+              and keep this section in sync with what’s pinned there.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-inner">
+      <div class="brand-disclaimer">
+        © <span id="year"></span> Valour SMP. All rights reserved.<br />
+        Not affiliated with Mojang Studios or Microsoft.
+      </div>
+
+      <div class="footer-links">
+        <a href="https://store.YOUR_DOMAIN_HERE/" target="_blank" rel="noreferrer">
+          Store
+        </a>
+        <a href="https://discord.gg/YOUR_DISCORD" target="_blank" rel="noreferrer">
+          Discord
+        </a>
+        <!-- Add TOS/Privacy links here if you have them -->
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+    });
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      navLinks.classList.remove('show');
+    }
+
+    // Copy IP to clipboard
+    function copyIp() {
+      const ip = document.getElementById('serverIp').innerText.trim();
+      const copyButton = document.getElementById('copyButton');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ip).then(() => {
+          copyButton.innerHTML = '<span>✅</span><span>Copied!</span>';
+          setTimeout(() => {
+            copyButton.innerHTML = '<span>📋</span><span>Copy IP</span>';
+          }, 1500);
+        }).catch(() => fallbackCopy(ip, copyButton));
+      } else {
+        fallbackCopy(ip, copyButton);
+      }
+    }
+
+    function fallbackCopy(text, copyButton) {
+      const input = document.createElement('input');
+      input.value = text;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+
+      copyButton.innerHTML = '<span>✅</span><span>Copied!</span>';
+      setTimeout(() => {
+        copyButton.innerHTML = '<span>📋</span><span>Copy IP</span>';
+      }, 1500);
+    }
+
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
