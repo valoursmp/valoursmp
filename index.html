@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -79,6 +79,91 @@
       max-width: 1120px;
       margin: 0 auto;
       padding: 0 1.5rem;
+    }
+
+    /* === ROTATING BACKGROUND CUBE === */
+
+    .bg-cube-wrapper {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 0; /* behind content, above noise */
+      opacity: 0.4; /* ~40% transparency */
+    }
+
+    .bg-cube {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      transform-style: preserve-3d;
+      animation: spinCube 80s linear infinite; /* slow rotation */
+      filter: blur(1px); /* keep it soft so text is readable */
+    }
+
+    @media (min-width: 900px) {
+      .bg-cube {
+        width: 340px;
+        height: 340px;
+      }
+    }
+
+    .bg-cube-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      /* Discord-style blue gradient */
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 0 40px rgba(15, 23, 42, 0.9);
+      image-rendering: pixelated; /* keeps a chunky vibe if you later use images */
+    }
+
+    /* Default size (260px): half = 130px */
+    .bg-cube-front   { transform: translateZ(130px); }
+    .bg-cube-back    { transform: rotateY(180deg) translateZ(130px); }
+    .bg-cube-right   { transform: rotateY(90deg) translateZ(130px); }
+    .bg-cube-left    { transform: rotateY(-90deg) translateZ(130px); }
+    .bg-cube-top     { transform: rotateX(90deg) translateZ(130px); }
+    .bg-cube-bottom  { transform: rotateX(-90deg) translateZ(130px); }
+
+    /* Larger size on wider screens (340px): half = 170px */
+    @media (min-width: 900px) {
+      .bg-cube-front,
+      .bg-cube-back,
+      .bg-cube-right,
+      .bg-cube-left,
+      .bg-cube-top,
+      .bg-cube-bottom {
+        transform: none; /* reset first */
+      }
+      .bg-cube-front   { transform: translateZ(170px); }
+      .bg-cube-back    { transform: rotateY(180deg) translateZ(170px); }
+      .bg-cube-right   { transform: rotateY(90deg) translateZ(170px); }
+      .bg-cube-left    { transform: rotateY(-90deg) translateZ(170px); }
+      .bg-cube-top     { transform: rotateX(90deg) translateZ(170px); }
+      .bg-cube-bottom  { transform: rotateX(-90deg) translateZ(170px); }
+    }
+
+    @keyframes spinCube {
+      0% {
+        transform: rotateX(15deg) rotateY(25deg);
+      }
+      50% {
+        transform: rotateX(195deg) rotateY(205deg);
+      }
+      100% {
+        transform: rotateX(375deg) rotateY(385deg);
+      }
+    }
+
+    /* Ensure main content sits above cube */
+    .page-root {
+      position: relative;
+      z-index: 1;
     }
 
     /* NAVBAR */
@@ -753,7 +838,7 @@
       height: 100%;
       border-radius: inherit;
       background: linear-gradient(90deg, var(--accent), var(--accent-alt));
-      width: 0%; /* <-- update this manually based on signups */
+      width: 0%; /* manually update based on signups */
     }
 
     .signup-note {
@@ -955,537 +1040,546 @@
 <body>
   <div class="noise"></div>
 
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="nav-inner container">
-      <div class="nav-left">
-        <div class="logo-wrap">
-          <div class="logo-circle">
-            <!-- You can replace this with an icon if you want -->
-            <span>V</span>
+  <!-- Rotating blue cube background -->
+  <div class="bg-cube-wrapper">
+    <div class="bg-cube">
+      <div class="bg-cube-face bg-cube-front"></div>
+      <div class="bg-cube-face bg-cube-back"></div>
+      <div class="bg-cube-face bg-cube-right"></div>
+      <div class="bg-cube-face bg-cube-left"></div>
+      <div class="bg-cube-face bg-cube-top"></div>
+      <div class="bg-cube-face bg-cube-bottom"></div>
+    </div>
+  </div>
+
+  <!-- Main site content -->
+  <div class="page-root">
+    <!-- NAVBAR -->
+    <header class="navbar">
+      <div class="nav-inner container">
+        <div class="nav-left">
+          <div class="logo-wrap">
+            <div class="logo-circle">
+              <!-- You can replace this with an icon if you want -->
+              <span>V</span>
+            </div>
+
+            <!-- TEXT LOGO AREA: replace src with your actual text logo file -->
+            <!-- For example: assets/valour-smp-logo.png -->
+            <img
+              src="assets/valour-smp-logo.png"
+              alt="Valour SMP Logo"
+              class="logo-text"
+            />
           </div>
 
-          <!-- TEXT LOGO AREA: replace src with your actual text logo file -->
-          <!-- For example: assets/valour-smp-logo.png -->
-          <img
-            src="https://imgur.com/gpvasSx"
-            alt="Valour SMP Logo"
-            class="logo-text"
-          />
+          <div class="nav-title">
+            <span class="nav-title-main">Valour SMP</span>
+            <span class="nav-title-sub">Limited-slot Civilization SMP</span>
+          </div>
         </div>
 
-        <div class="nav-title">
-          <span class="nav-title-main">Valour SMP</span>
-          <span class="nav-title-sub">Limited-slot Civilization SMP</span>
-        </div>
+        <nav>
+          <div class="nav-toggle" id="navToggle">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="nav-links" id="navLinks">
+            <a href="#about">About</a>
+            <a href="#civilizations">Civilizations</a>
+            <a href="#signup">Signup Status</a>
+            <a href="#join">How to Join</a>
+            <a href="#faq">FAQ</a>
+            <a
+              href="https://discord.gg/YOUR_DISCORD"
+              class="nav-pill"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span>●</span> Join Discord
+            </a>
+          </div>
+        </nav>
       </div>
+    </header>
 
-      <nav>
-        <div class="nav-toggle" id="navToggle">
-          <span></span>
-          <span></span>
+    <!-- HERO -->
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <!-- LEFT -->
+          <div>
+            <div class="hero-badge-row">
+              <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                Whitelisted • Limited to 200 players
+              </div>
+              <div class="hero-badge">
+                🗺️ 1:4000 Earth map • Europe host
+              </div>
+            </div>
+
+            <h1 class="hero-title">
+              A <span class="hero-highlight">Civilization SMP</span> with real borders.
+            </h1>
+            <p class="hero-subtitle">
+              Valour SMP is a Java-only Civilization SMP inspired by Ish-style videos.
+              Four major civilizations — North America, Europe, Asia, and Africa —
+              battle for control of a 1:4000 Earth map. No claims. No /tp. When borders
+              drop, everything else is up for conquest.
+            </p>
+
+            <div class="hero-cta-row">
+              <button class="btn btn-primary" onclick="scrollToSection('signup')">
+                View Signup Status
+              </button>
+              <button
+                class="btn btn-ghost"
+                onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
+              >
+                Apply via Discord
+              </button>
+            </div>
+
+            <div class="hero-ip-box">
+              <div class="hero-ip-meta">
+                <span class="ip-label">Server Address</span>
+                <span class="ip-value" id="serverIp">valoursmp.feathermc.gg</span>
+                <span class="version-pill">
+                  <span>📦</span>
+                  Java Edition • 1.20+ • Europe region
+                </span>
+              </div>
+              <button
+                class="copy-btn"
+                onclick="copyIp()"
+                id="copyButton"
+              >
+                <span>📋</span>
+                <span>Copy IP</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT CARD -->
+          <div class="hero-right">
+            <div class="hero-card">
+              <div class="hero-card-inner">
+                <div class="hero-card-header">
+                  <span class="hero-card-title">Server overview</span>
+                  <span class="status-dot"></span>
+                </div>
+
+                <div class="hero-card-main">
+                  <div class="hero-card-name">Valour SMP</div>
+                  <div class="hero-card-tagline">
+                    Limited-run Civilization SMP on a custom Earth map.
+                  </div>
+                </div>
+
+                <div class="hero-card-stats">
+                  <div class="stat-pill">
+                    <div class="stat-label">Region</div>
+                    <div class="stat-value">Europe</div>
+                  </div>
+                  <div class="stat-pill">
+                    <div class="stat-label">Map</div>
+                    <div class="stat-value">1:4000 Earth</div>
+                  </div>
+                  <div class="stat-pill">
+                    <div class="stat-label">Slots</div>
+                    <div class="stat-value">200 Max</div>
+                  </div>
+                </div>
+
+                <div class="hero-card-actions">
+                  <button
+                    class="btn btn-primary"
+                    style="width: 100%; justify-content: center;"
+                    onclick="scrollToSection('civilizations')"
+                  >
+                    View Civilizations
+                  </button>
+                  <button
+                    class="btn btn-ghost"
+                    style="width: 100%; justify-content: center;"
+                    onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
+                  >
+                    Join Discord & Apply
+                  </button>
+                  <div class="mini-link" onclick="scrollToSection('join')">
+                    <span>➜</span>
+                    <span>See how the whitelist & signup works</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /hero-grid -->
+      </section>
+
+      <!-- ABOUT / FEATURES -->
+      <section id="about">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-eyebrow">About</span>
+            <h2 class="section-title">A story-driven, unforgiving SMP</h2>
+            <p class="section-subtitle">
+              Valour SMP isn’t a casual public server. It’s a limited, curated
+              world where wars, alliances, and betrayals actually matter.
+              Once the 200 slots are filled and the season begins, the storyline
+              belongs to the players.
+            </p>
+          </div>
+
+          <div class="card-grid">
+            <article class="feature-card">
+              <div class="feature-inner">
+                <div class="feature-icon">🛡️</div>
+                <h3 class="feature-title">No claims, no /tp</h3>
+                <p class="feature-text">
+                  There are no land claims or teleport commands. If you build
+                  something, you defend it. Travel, logistics, and positioning
+                  actually matter.
+                </p>
+                <span class="feature-tag">Pure survival rules</span>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-inner">
+                <div class="feature-icon">🗺️</div>
+                <h3 class="feature-title">1:4000 Earth map</h3>
+                <p class="feature-text">
+                  Fight over an Earth recreation at 1:4000 scale. Control choke
+                  points, coastlines, and key resources as the world turns into a
+                  geopolitical sandbox.
+                </p>
+                <span class="feature-tag">Hand-picked world</span>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-inner">
+                <div class="feature-icon">🌍</div>
+                <h3 class="feature-title">Four starting civilizations</h3>
+                <p class="feature-text">
+                  North America, Europe, Asia, and Africa start as the major
+                  powers. When borders drop, all remaining land becomes a free-for-all.
+                </p>
+                <span class="feature-tag">Borders & conquest</span>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-inner">
+                <div class="feature-icon">💬</div>
+                <h3 class="feature-title">Discord-linked chat</h3>
+                <p class="feature-text">
+                  In-game chat is linked with Discord, so diplomacy, trash-talk,
+                  and announcements live in one place.
+                </p>
+                <span class="feature-tag">Always connected</span>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-inner">
+                <div class="feature-icon">🎉</div>
+                <h3 class="feature-title">Events & story arcs</h3>
+                <p class="feature-text">
+                  Expect wars, peace talks, world events, and staff-driven arcs
+                  that push the server’s story in new directions.
+                </p>
+                <span class="feature-tag">Cinematic season</span>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-inner">
+                <div class="feature-icon">♾️</div>
+                <h3 class="feature-title">No map resets</h3>
+                <p class="feature-text">
+                  This isn’t a “reset every month” server. The world tells a
+                  continuous story. Scars, ruins, and old bases stay as proof of
+                  what happened.
+                </p>
+                <span class="feature-tag">Actions are permanent</span>
+              </div>
+            </article>
+          </div>
         </div>
-        <div class="nav-links" id="navLinks">
-          <a href="#about">About</a>
-          <a href="#civilizations">Civilizations</a>
-          <a href="#signup">Signup Status</a>
-          <a href="#join">How to Join</a>
-          <a href="#faq">FAQ</a>
-          <a
-            href="https://discord.gg/YOUR_DISCORD"
-            class="nav-pill"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span>●</span> Join Discord
+      </section>
+
+      <!-- CIVILIZATIONS -->
+      <section id="civilizations">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-eyebrow">Civilizations</span>
+            <h2 class="section-title">Four powers at the start of the season</h2>
+            <p class="section-subtitle">
+              Every player will belong to one of four main civilizations.
+              These nations define early borders, alliances, and rivalries until
+              the world opens up for full-scale conquest.
+            </p>
+          </div>
+
+          <div class="civ-grid">
+            <article class="civ-card">
+              <h3 class="civ-name">North America</h3>
+              <div class="civ-tag">Industry • Expansion • Long-range logistics</div>
+              <p class="civ-text">
+                Focused on technology, trade routes, and long-distance operations.
+                Expect strong infrastructure, powerful bases, and control over key oceans.
+              </p>
+            </article>
+
+            <article class="civ-card">
+              <h3 class="civ-name">Europe</h3>
+              <div class="civ-tag">Diplomacy • Central position • Dense borders</div>
+              <p class="civ-text">
+                Your home region. Europe sits at the center of the map, forced to
+                navigate diplomacy and wars in all directions.
+              </p>
+            </article>
+
+            <article class="civ-card">
+              <h3 class="civ-name">Asia</h3>
+              <div class="civ-tag">Scale • Population • Frontline conflicts</div>
+              <p class="civ-text">
+                Big landmass, many fronts. Asia excels in numbers, territory, and
+                wide-front wars when borders eventually fall.
+              </p>
+            </article>
+
+            <article class="civ-card">
+              <h3 class="civ-name">Africa</h3>
+              <div class="civ-tag">Resources • Growth • Underdog potential</div>
+              <p class="civ-text">
+                Resource-rich with room to grow. Africa can become a late-game
+                powerhouse if it survives early pressure.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SIGNUP STATUS -->
+      <section id="signup">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-eyebrow">Signup Status</span>
+            <h2 class="section-title">Players who have signed up</h2>
+            <p class="section-subtitle">
+              Valour SMP is capped at 200 players. Once all slots are filled
+              and the whitelist is locked in, the season begins. Update this section
+              manually whenever someone is accepted.
+            </p>
+          </div>
+
+          <div class="signup-wrap">
+            <div class="signup-panel">
+              <div class="signup-stat-row">
+                <!-- Update this number manually -->
+                <div class="signup-main-count">
+                  Signed up: <span id="signedUpCount">0</span> / 200
+                </div>
+                <div class="signup-cap">
+                  (Update the number and list below in the HTML file)
+                </div>
+              </div>
+
+              <div class="capacity-bar">
+                <!-- Manually set width to (signed_up / 200 * 100)% -->
+                <div class="capacity-fill" style="width: 0%;"></div>
+              </div>
+
+              <p class="signup-note">
+                Once we hit 200 accepted players, signups will close for this season.
+                Extra applications may be waitlisted in case of drops.
+              </p>
+
+              <div class="player-list-title">Accepted players (manual list):</div>
+              <ul class="player-list">
+                <!-- Add players like:
+                <li>[EU] ExamplePlayer1</li>
+                <li>[NA] ExamplePlayer2</li>
+                etc.
+                -->
+              </ul>
+            </div>
+
+            <aside class="signup-side">
+              <h3>How signups work</h3>
+              <p>
+                All signups are handled through Discord. You’ll fill out a short
+                form, pick a preferred civilization, and wait for staff to review.
+              </p>
+              <p>
+                We’re aiming for around 200 players total. Balance between
+                civilizations matters more than who signs up first.
+              </p>
+              <p>
+                To be considered, you should be active, not a griefer, and actually
+                interested in the story and politics of a Civilization SMP.
+              </p>
+              <button
+                class="btn btn-primary"
+                onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
+              >
+                Apply on Discord
+              </button>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW TO JOIN -->
+      <section id="join">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-eyebrow">How to join</span>
+            <h2 class="section-title">Java-only, whitelisted access</h2>
+            <p class="section-subtitle">
+              This isn’t a public “anyone can log in” server. You’ll apply,
+              get accepted, then be whitelisted before the season begins.
+            </p>
+          </div>
+
+          <div class="steps-grid">
+            <article class="step-card">
+              <div class="step-number">1</div>
+              <h3 class="step-title">Apply on Discord</h3>
+              <p class="step-text">
+                Join the Valour SMP Discord using the button below. Look for the
+                <strong>#apply</strong> or <strong>#smp-signup</strong> channel and
+                complete the form.
+              </p>
+              <button
+                class="btn btn-primary"
+                onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
+              >
+                Join Discord
+              </button>
+            </article>
+
+            <article class="step-card">
+              <div class="step-number">2</div>
+              <h3 class="step-title">Get whitelisted & join</h3>
+              <p class="step-text">
+                If you’re accepted, you’ll be added to the whitelist and assigned
+                a civilization. When the season starts, launch
+                <strong>Minecraft Java</strong> and add the server IP:
+              </p>
+              <p class="step-text" style="color:#e5e7eb;">
+                <code style="background:rgba(15,23,42,0.9); padding:0.25rem 0.4rem; border-radius:0.4rem;">
+                  valoursmp.feathermc.gg
+                </code>
+              </p>
+              <p class="step-text">
+                No Bedrock, no cracked clients — Java only.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-eyebrow">FAQ</span>
+            <h2 class="section-title">Common questions</h2>
+            <p class="section-subtitle">
+              Some quick answers. You can add more as questions come up on Discord.
+            </p>
+          </div>
+
+          <div class="faq-grid">
+            <div class="faq-list">
+              <div class="faq-item">
+                <div class="faq-q">Is this a public server?</div>
+                <div class="faq-a">
+                  No. Valour SMP is a limited-slot, whitelisted Civilization SMP.
+                  You must apply through Discord and be accepted to join.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">Is it Java-only?</div>
+                <div class="faq-a">
+                  Yes. The server is Java Edition only. Bedrock and cracked
+                  clients are not supported.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">Are there land claims or /tp?</div>
+                <div class="faq-a">
+                  No. There are no claim systems or teleport commands like /home
+                  or /tpa. You move, travel, and defend your territory the hard way.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">Will the world ever reset?</div>
+                <div class="faq-a">
+                  The goal is to keep the world continuous for the season, so
+                  history is visible. Any major changes (like a new season) will
+                  be announced well in advance.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">How are civilizations assigned?</div>
+                <div class="faq-a">
+                  You can select a preferred civilization in your application,
+                  but final placement may be adjusted for balance between the
+                  four major regions.
+                </div>
+              </div>
+            </div>
+
+            <aside class="faq-side">
+              <h3>Still have questions?</h3>
+              <p>
+                If you’re unsure about anything — application status, rules,
+                civilization balance, or technical problems — reach out on Discord.
+              </p>
+
+              <button
+                class="btn btn-primary"
+                onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
+              >
+                Talk to staff on Discord
+              </button>
+
+              <p class="note">
+                You can also create a <strong>#faq</strong> channel in Discord
+                and mirror its content here to keep everything consistent.
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container footer-inner">
+        <div class="brand-disclaimer">
+          © <span id="year"></span> Valour SMP. All rights reserved.<br />
+          Not affiliated with Mojang Studios or Microsoft.
+        </div>
+
+        <div class="footer-links">
+          <a href="https://discord.gg/YOUR_DISCORD" target="_blank" rel="noreferrer">
+            Discord
           </a>
         </div>
-      </nav>
-    </div>
-  </header>
-
-  <!-- HERO -->
-  <main>
-    <section class="hero">
-      <div class="container hero-grid">
-        <!-- LEFT -->
-        <div>
-          <div class="hero-badge-row">
-            <div class="hero-badge">
-              <span class="hero-badge-dot"></span>
-              Whitelisted • Limited to 200 players
-            </div>
-            <div class="hero-badge">
-              🗺️ 1:4000 Earth map • Europe host
-            </div>
-          </div>
-
-          <h1 class="hero-title">
-            A <span class="hero-highlight">Civilization SMP</span> with real borders.
-          </h1>
-          <p class="hero-subtitle">
-            Valour SMP is a Java-only Civilization SMP inspired by Ish-style videos.
-            Four major civilizations — North America, Europe, Asia, and Africa —
-            battle for control of a 1:4000 Earth map. No claims. No /tp. When borders
-            drop, everything else is up for conquest.
-          </p>
-
-          <div class="hero-cta-row">
-            <button class="btn btn-primary" onclick="scrollToSection('signup')">
-              View Signup Status
-            </button>
-            <button
-              class="btn btn-ghost"
-              onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
-            >
-              Apply via Discord
-            </button>
-          </div>
-
-          <div class="hero-ip-box">
-            <div class="hero-ip-meta">
-              <span class="ip-label">Server Address</span>
-              <span class="ip-value" id="serverIp">valoursmp.feathermc.gg</span>
-              <span class="version-pill">
-                <span>📦</span>
-                Java Edition • 1.20+ • Europe region
-              </span>
-            </div>
-            <button
-              class="copy-btn"
-              onclick="copyIp()"
-              id="copyButton"
-            >
-              <span>📋</span>
-              <span>Copy IP</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- RIGHT CARD -->
-        <div class="hero-right">
-          <div class="hero-card">
-            <div class="hero-card-inner">
-              <div class="hero-card-header">
-                <span class="hero-card-title">Server overview</span>
-                <span class="status-dot"></span>
-              </div>
-
-              <div class="hero-card-main">
-                <div class="hero-card-name">Valour SMP</div>
-                <div class="hero-card-tagline">
-                  Limited-run Civilization SMP on a custom Earth map.
-                </div>
-              </div>
-
-              <div class="hero-card-stats">
-                <div class="stat-pill">
-                  <div class="stat-label">Region</div>
-                  <div class="stat-value">Europe</div>
-                </div>
-                <div class="stat-pill">
-                  <div class="stat-label">Map</div>
-                  <div class="stat-value">1:4000 Earth</div>
-                </div>
-                <div class="stat-pill">
-                  <div class="stat-label">Slots</div>
-                  <div class="stat-value">200 Max</div>
-                </div>
-              </div>
-
-              <div class="hero-card-actions">
-                <button
-                  class="btn btn-primary"
-                  style="width: 100%; justify-content: center;"
-                  onclick="scrollToSection('civilizations')"
-                >
-                  View Civilizations
-                </button>
-                <button
-                  class="btn btn-ghost"
-                  style="width: 100%; justify-content: center;"
-                  onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
-                >
-                  Join Discord & Apply
-                </button>
-                <div class="mini-link" onclick="scrollToSection('join')">
-                  <span>➜</span>
-                  <span>See how the whitelist & signup works</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> <!-- /hero-grid -->
-    </section>
-
-    <!-- ABOUT / FEATURES -->
-    <section id="about">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">About</span>
-          <h2 class="section-title">A story-driven, unforgiving SMP</h2>
-          <p class="section-subtitle">
-            Valour SMP isn’t a casual public server. It’s a limited, curated
-            world where wars, alliances, and betrayals actually matter.
-            Once the 200 slots are filled and the season begins, the storyline
-            belongs to the players.
-          </p>
-        </div>
-
-        <div class="card-grid">
-          <article class="feature-card">
-            <div class="feature-inner">
-              <div class="feature-icon">🛡️</div>
-              <h3 class="feature-title">No claims, no /tp</h3>
-              <p class="feature-text">
-                There are no land claims or teleport commands. If you build
-                something, you defend it. Travel, logistics, and positioning
-                actually matter.
-              </p>
-              <span class="feature-tag">Pure survival rules</span>
-            </div>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-inner">
-              <div class="feature-icon">🗺️</div>
-              <h3 class="feature-title">1:4000 Earth map</h3>
-              <p class="feature-text">
-                Fight over an Earth recreation at 1:4000 scale. Control choke
-                points, coastlines, and key resources as the world turns into a
-                geopolitical sandbox.
-              </p>
-              <span class="feature-tag">Hand-picked world</span>
-            </div>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-inner">
-              <div class="feature-icon">🌍</div>
-              <h3 class="feature-title">Four starting civilizations</h3>
-              <p class="feature-text">
-                North America, Europe, Asia, and Africa start as the major
-                powers. When borders drop, all remaining land becomes a free-for-all.
-              </p>
-              <span class="feature-tag">Borders & conquest</span>
-            </div>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-inner">
-              <div class="feature-icon">💬</div>
-              <h3 class="feature-title">Discord-linked chat</h3>
-              <p class="feature-text">
-                In-game chat is linked with Discord, so diplomacy, trash-talk,
-                and announcements live in one place.
-              </p>
-              <span class="feature-tag">Always connected</span>
-            </div>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-inner">
-              <div class="feature-icon">🎉</div>
-              <h3 class="feature-title">Events & story arcs</h3>
-              <p class="feature-text">
-                Expect wars, peace talks, world events, and staff-driven arcs
-                that push the server’s story in new directions.
-              </p>
-              <span class="feature-tag">Cinematic season</span>
-            </div>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-inner">
-              <div class="feature-icon">♾️</div>
-              <h3 class="feature-title">No map resets</h3>
-              <p class="feature-text">
-                This isn’t a “reset every month” server. The world tells a
-                continuous story. Scars, ruins, and old bases stay as proof of
-                what happened.
-              </p>
-              <span class="feature-tag">Actions are permanent</span>
-            </div>
-          </article>
-        </div>
       </div>
-    </section>
-
-    <!-- CIVILIZATIONS -->
-    <section id="civilizations">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">Civilizations</span>
-          <h2 class="section-title">Four powers at the start of the season</h2>
-          <p class="section-subtitle">
-            Every player will belong to one of four main civilizations.
-            These nations define early borders, alliances, and rivalries until
-            the world opens up for full-scale conquest.
-          </p>
-        </div>
-
-        <div class="civ-grid">
-          <article class="civ-card">
-            <h3 class="civ-name">North America</h3>
-            <div class="civ-tag">Industry • Expansion • Long-range logistics</div>
-            <p class="civ-text">
-              Focused on technology, trade routes, and long-distance operations.
-              Expect strong infrastructure, powerful bases, and control over key oceans.
-            </p>
-          </article>
-
-          <article class="civ-card">
-            <h3 class="civ-name">Europe</h3>
-            <div class="civ-tag">Diplomacy • Central position • Dense borders</div>
-            <p class="civ-text">
-              Your home region. Europe sits at the center of the map, forced to
-              navigate diplomacy and wars in all directions.
-            </p>
-          </article>
-
-          <article class="civ-card">
-            <h3 class="civ-name">Asia</h3>
-            <div class="civ-tag">Scale • Population • Frontline conflicts</div>
-            <p class="civ-text">
-              Big landmass, many fronts. Asia excels in numbers, territory, and
-              wide-front wars when borders eventually fall.
-            </p>
-          </article>
-
-          <article class="civ-card">
-            <h3 class="civ-name">Africa</h3>
-            <div class="civ-tag">Resources • Growth • Underdog potential</div>
-            <p class="civ-text">
-              Resource-rich with room to grow. Africa can become a late-game
-              powerhouse if it survives early pressure.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- SIGNUP STATUS -->
-    <section id="signup">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">Signup Status</span>
-          <h2 class="section-title">Players who have signed up</h2>
-          <p class="section-subtitle">
-            Valour SMP is capped at 200 players. Once all slots are filled
-            and the whitelist is locked in, the season begins. Update this section
-            manually whenever someone is accepted.
-          </p>
-        </div>
-
-        <div class="signup-wrap">
-          <div class="signup-panel">
-            <div class="signup-stat-row">
-              <!-- Update this number manually -->
-              <div class="signup-main-count">
-                Signed up: <span id="signedUpCount">0</span> / 200
-              </div>
-              <div class="signup-cap">
-                (Update the number and list below in the HTML file)
-              </div>
-            </div>
-
-            <div class="capacity-bar">
-              <!-- Manually set width to (signed_up / 200 * 100)% -->
-              <div class="capacity-fill" style="width: 0%;"></div>
-            </div>
-
-            <p class="signup-note">
-              Once we hit 200 accepted players, signups will close for this season.
-              Extra applications may be waitlisted in case of drops.
-            </p>
-
-            <div class="player-list-title">Accepted players (manual list):</div>
-            <ul class="player-list">
-              <!-- EXAMPLES – just edit these names or add/remove li elements -->
-              <!--
-                Tip: You can group by civilization or just keep one big list.
-                Example format:
-                [EU] PlayerName
-                [NA] PlayerName
-              -->
-              <!-- <li>[EU] ExamplePlayer1</li>
-              <li>[NA] ExamplePlayer2</li>
-              <li>[AS] ExamplePlayer3</li>
-              <li>[AF] ExamplePlayer4</li> -->
-            </ul>
-          </div>
-
-          <aside class="signup-side">
-            <h3>How signups work</h3>
-            <p>
-              All signups are handled through Discord. You’ll fill out a short
-              form, pick a preferred civilization, and wait for staff to review.
-            </p>
-            <p>
-              We’re aiming for around 200 players total. Balance between
-              civilizations matters more than who signs up first.
-            </p>
-            <p>
-              To be considered, you should be active, not a griefer, and actually
-              interested in the story and politics of a Civilization SMP.
-            </p>
-            <button
-              class="btn btn-primary"
-              onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
-            >
-              Apply on Discord
-            </button>
-          </aside>
-        </div>
-      </div>
-    </section>
-
-    <!-- HOW TO JOIN -->
-    <section id="join">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">How to join</span>
-          <h2 class="section-title">Java-only, whitelisted access</h2>
-          <p class="section-subtitle">
-            This isn’t a public “anyone can log in” server. You’ll apply,
-            get accepted, then be whitelisted before the season begins.
-          </p>
-        </div>
-
-        <div class="steps-grid">
-          <article class="step-card">
-            <div class="step-number">1</div>
-            <h3 class="step-title">Apply on Discord</h3>
-            <p class="step-text">
-              Join the Valour SMP Discord using the button below. Look for the
-              <strong>#apply</strong> or <strong>#smp-signup</strong> channel and
-              complete the form.
-            </p>
-            <button
-              class="btn btn-primary"
-              onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
-            >
-              Join Discord
-            </button>
-          </article>
-
-          <article class="step-card">
-            <div class="step-number">2</div>
-            <h3 class="step-title">Get whitelisted & join</h3>
-            <p class="step-text">
-              If you’re accepted, you’ll be added to the whitelist and assigned
-              a civilization. When the season starts, launch
-              <strong>Minecraft Java</strong> and add the server IP:
-            </p>
-            <p class="step-text" style="color:#e5e7eb;">
-              <code style="background:rgba(15,23,42,0.9); padding:0.25rem 0.4rem; border-radius:0.4rem;">
-                valoursmp.feathermc.gg
-              </code>
-            </p>
-            <p class="step-text">
-              No Bedrock, no cracked clients — Java only.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">FAQ</span>
-          <h2 class="section-title">Common questions</h2>
-          <p class="section-subtitle">
-            Some quick answers. You can add more as questions come up on Discord.
-          </p>
-        </div>
-
-        <div class="faq-grid">
-          <div class="faq-list">
-            <div class="faq-item">
-              <div class="faq-q">Is this a public server?</div>
-              <div class="faq-a">
-                No. Valour SMP is a limited-slot, whitelisted Civilization SMP.
-                You must apply through Discord and be accepted to join.
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-q">Is it Java-only?</div>
-              <div class="faq-a">
-                Yes. The server is Java Edition only. Bedrock and cracked
-                clients are not supported.
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-q">Are there land claims or /tp?</div>
-              <div class="faq-a">
-                No. There are no claim systems or teleport commands like /home
-                or /tpa. You move, travel, and defend your territory the hard way.
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-q">Will the world ever reset?</div>
-              <div class="faq-a">
-                The goal is to keep the world continuous for the season, so
-                history is visible. Any major changes (like a new season) will
-                be announced well in advance.
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-q">How are civilizations assigned?</div>
-              <div class="faq-a">
-                You can select a preferred civilization in your application,
-                but final placement may be adjusted for balance between the
-                four major regions.
-              </div>
-            </div>
-          </div>
-
-          <aside class="faq-side">
-            <h3>Still have questions?</h3>
-            <p>
-              If you’re unsure about anything — application status, rules,
-              civilization balance, or technical problems — reach out on Discord.
-            </p>
-
-            <button
-              class="btn btn-primary"
-              onclick="window.open('https://discord.gg/YOUR_DISCORD', '_blank')"
-            >
-              Talk to staff on Discord
-            </button>
-
-            <p class="note">
-              You can also create a <strong>#faq</strong> channel in Discord
-              and mirror its content here to keep everything consistent.
-            </p>
-          </aside>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="container footer-inner">
-      <div class="brand-disclaimer">
-        © <span id="year"></span> Valour SMP. All rights reserved.<br />
-        Not affiliated with Mojang Studios or Microsoft.
-      </div>
-
-      <div class="footer-links">
-        <a href="https://discord.gg/YOUR_DISCORD" target="_blank" rel="noreferrer">
-          Discord
-        </a>
-      </div>
-    </div>
-  </footer>
+    </footer>
+  </div> <!-- /.page-root -->
 
   <script>
     // Mobile nav
